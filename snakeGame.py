@@ -17,10 +17,17 @@ def clearScreen():
 class Snake():
     currentDirection = 'right'
     headPosition = [random.randrange(0,boardsize), random.randrange(0,boardsize)]
-    tailPosition = []
+    headCharacter = 'H'
+    tailPosition = [headPosition[0], headPosition[1]-1]
     tailDirection = 'right'
-    length = 0
+    tailCharacter = 'T'
+    length = 1
     alive = True
+
+    def __init__(self, xPosition, yPosition, length):
+        self.headPosition[0] = xPosition
+        self.headPosition[1] = yPosition
+        self.length = length
 
     @classmethod
     def updateSnakeHeadPosition(self):
@@ -32,7 +39,8 @@ class Snake():
             self.headPosition[0] += 1
         elif self.currentDirection == 'down':
             self.headPosition[0] -= 1
-    
+
+
     @classmethod
     def updateSnakeDirection(self, input):
         if input == None:
@@ -48,7 +56,6 @@ class Snake():
 
 
 
-
 def keyboardInputCheck():
     if msvcrt.kbhit():
         return msvcrt.getwch()
@@ -60,22 +67,28 @@ def generateBoard():
     for i in range(boardsize):
         currentBoardState.append([])
         for j in range(boardsize):
-            currentBoardState[i].append(".")
+            currentBoardState[i].append('.')
 
 
 def generateNewAppleLocation():
     positionX = random.randrange(0,boardsize-1)
     positionY = random.randrange(0,boardsize-1)
 
-    while currentBoardState[positionX][positionY] != ".":
+    while currentBoardState[positionX][positionY] != '.':
         positionX = random.randrange(0,boardsize-1)
         positionY = random.randrange(0,boardsize-1)
     
-    currentBoardState[positionX][positionY] = "O"
+    currentBoardState[positionX][positionY] = 'O'
+
+def generateSnake():
+    snake = Snake(10, 5, 0)
+
+    snake.tailPosition = [snake.headPosition[0], snake.headPosition[1]-1]
+
+    currentBoardState[snake.headPosition[0]][snake.headPosition[1]] = snake.headCharacter
+    currentBoardState[snake.tailPosition[0]][snake.tailPosition[1]] = snake.tailCharacter
 
 
-def updateBoard(Snake):
-    return True
 
 def printBoard():
     clearScreen()
@@ -108,11 +121,15 @@ playingGame = True
 
 generateBoard()
 generateNewAppleLocation()
+generateSnake()
+
 #Main Game loop
 while playingGame:
     
     #game logic
     currentInput = keyboardInputCheck()
+    
+
     
 
 
