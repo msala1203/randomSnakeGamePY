@@ -9,6 +9,8 @@ boardsize = 20
 
 currentBoardState = []
 
+
+
 def clearScreen():
     # Move cursor to top-left and clear screen
     # \x1b = ESC
@@ -80,14 +82,13 @@ def generateNewAppleLocation():
     
     currentBoardState[positionX][positionY] = 'O'
 
-def generateSnake():
-    snake = Snake(10, 5, 0)
 
-    snake.tailPosition = [snake.headPosition[0], snake.headPosition[1]-1]
+def updateSnake():
+    snake.updateSnakeDirection
+    snake.updateSnakeHeadPosition
 
-    currentBoardState[snake.headPosition[0]][snake.headPosition[1]] = snake.headCharacter
-    currentBoardState[snake.tailPosition[0]][snake.tailPosition[1]] = snake.tailCharacter
-
+def updateBoard():
+    currentBoardState[snake.headPosition[0]][snake.headPosition[1]]
 
 
 def printBoard():
@@ -119,9 +120,19 @@ def printBoard():
 
 playingGame = True
 
+snake = Snake(10,5,0)
+
+def generateSnake():
+
+    snake.tailPosition = [snake.headPosition[0], snake.headPosition[1]-1]
+
+    currentBoardState[snake.headPosition[0]][snake.headPosition[1]] = snake.headCharacter
+    currentBoardState[snake.tailPosition[0]][snake.tailPosition[1]] = snake.tailCharacter
+
+
 generateBoard()
-generateNewAppleLocation()
 generateSnake()
+generateNewAppleLocation()
 
 #Main Game loop
 while playingGame:
@@ -129,6 +140,8 @@ while playingGame:
     #game logic
     currentInput = keyboardInputCheck()
     
+    updateSnake()
+    updateBoard()
 
     
 
@@ -138,9 +151,10 @@ while playingGame:
     
     #render
     print(printBoard())
+    print(currentInput)
 
     #time Control
-    time.sleep(1/60)
+    time.sleep(1/5)
     
     
 
