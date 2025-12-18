@@ -38,9 +38,9 @@ class Snake():
         elif self.currentDirection == 'left':
             self.headPosition[1] -= 1
         elif self.currentDirection == 'up':
-            self.headPosition[0] += 1
-        elif self.currentDirection == 'down':
             self.headPosition[0] -= 1
+        elif self.currentDirection == 'down':
+            self.headPosition[0] += 1
 
 
     @classmethod
@@ -83,12 +83,12 @@ def generateNewAppleLocation():
     currentBoardState[positionX][positionY] = 'O'
 
 
-def updateSnake():
-    snake.updateSnakeDirection
-    snake.updateSnakeHeadPosition
+def updateSnake(currentInput):
+    snake.updateSnakeDirection(currentInput)
+    snake.updateSnakeHeadPosition()
 
 def updateBoard():
-    currentBoardState[snake.headPosition[0]][snake.headPosition[1]]
+    currentBoardState[snake.headPosition[0]][snake.headPosition[1]] = snake.headCharacter
 
 
 def printBoard():
@@ -140,7 +140,7 @@ while playingGame:
     #game logic
     currentInput = keyboardInputCheck()
     
-    updateSnake()
+    updateSnake(currentInput)
     updateBoard()
 
     
@@ -151,8 +151,8 @@ while playingGame:
     
     #render
     print(printBoard())
-    print(currentInput)
-
+    print('current Input:' + str(currentInput))
+    print('snake\'s current Direction: ' + str(snake.currentDirection))
     #time Control
     time.sleep(1/5)
     
