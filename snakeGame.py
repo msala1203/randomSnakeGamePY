@@ -21,7 +21,7 @@ class Snake():
     headPosition = [random.randrange(0,boardsize), random.randrange(0,boardsize)]
     bodyCharacter = 'H'
     tailPosition = [headPosition[0], headPosition[1]-1]
-    tailPositions = [headPosition, tailPosition, [tailPosition[0], tailPosition[1]-1], [tailPosition[0], tailPosition[1]-2]]
+    tailPositions = [headPosition, tailPosition]
     length = 1
     grow = False
     alive = True
@@ -30,6 +30,7 @@ class Snake():
     def __init__(self, xPosition, yPosition, length):
         self.headPosition[0] = xPosition
         self.headPosition[1] = yPosition
+        self.tailPositions[-1] = [xPosition, yPosition-1]
         self.length = length
 
     @classmethod
@@ -116,6 +117,8 @@ def updateSnake(currentInput):
     snake.updateSnakeDirection(currentInput)
     snake.updateTailPosition()
     snake.updateSnakeHeadPosition()
+
+    
     snake.updateSnakeOnBoard()
 
 
