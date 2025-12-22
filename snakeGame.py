@@ -120,6 +120,7 @@ def updateSnake(currentInput):
 
     if appleEatten():
         snake.grow = True
+        snake.tailPositions.append([0,0])
         generateNewAppleLocation()
 
     snake.updateTailPosition()
@@ -160,7 +161,7 @@ playingGame = True
 snake = Snake(10,5,0)
 
 def generateSnake():
-    
+
     currentBoardState[snake.headPosition[0]][snake.headPosition[1]] = snake.bodyCharacter
     #currentBoardState[snake.tailPosition[0]][snake.tailPosition[1]] = snake.tailCharacter
 
