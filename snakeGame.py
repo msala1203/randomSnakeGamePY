@@ -8,7 +8,7 @@ import os
 boardsize = 20
 
 currentBoardState = []
-appleLocation = []
+appleLocation = [0, 0]
 
 
 def clearScreen():
@@ -19,10 +19,9 @@ def clearScreen():
 class Snake():
     currentDirection = 'right'
     headPosition = [random.randrange(0,boardsize), random.randrange(0,boardsize)]
-    headCharacter = 'H'
+    bodyCharacter = 'H'
     tailPosition = [headPosition[0], headPosition[1]-1]
-    tailPositions = [headPosition, tailPosition]
-    tailCharacter = 't'
+    tailPositions = [headPosition, tailPosition, [tailPosition[0], tailPosition[1]-1], [tailPosition[0], tailPosition[1]-2]]
     length = 1
     grow = False
     alive = True
@@ -61,16 +60,12 @@ class Snake():
     @classmethod
     def updateTailPosition(self):
 
-        #after snake head moves up. shift all the values in the array up
-
-        self.tailPositions[0][0] = self.headPosition[0]
-        self.tailPositions[0][1] = self.headPosition[1]
-
         currentTailEndX = self.tailPositions[-1][0]
         currentTailEndY = self.tailPositions[-1][1]
 
         for i in range(len(self.tailPositions)-1, 0, -1):
-            self.tailPositions[i] = self.tailPositions[i-1]
+            self.tailPositions[i][0] = self.tailPositions[i-1][0]
+            self.tailPositions[i][1] = self.tailPositions[i-1][1]
             
         currentBoardState[currentTailEndX][currentTailEndY] = '.'
 
@@ -78,6 +73,11 @@ class Snake():
         currentBoardState[self.tailPositions[-1][0]][self.tailPositions[-1][1]] = '.'
         self.tailPositions[-1] = self.tailPositions [-2]
         '''
+
+    @classmethod
+    def updateSnakeOnBoard(self):
+        for i in self.tailPositions:
+            currentBoardState[i[0]][i[1]] = self.bodyCharacter
 
 
 def keyboardInputCheck():
@@ -116,9 +116,7 @@ def updateSnake(currentInput):
     snake.updateSnakeDirection(currentInput)
     snake.updateTailPosition()
     snake.updateSnakeHeadPosition()
-
-def updateBoard():
-    currentBoardState[snake.headPosition[0]][snake.headPosition[1]] = snake.headCharacter
+    snake.updateSnakeOnBoard()
 
 
 def printBoard():
@@ -156,8 +154,8 @@ def generateSnake():
 
     snake.tailPosition = [snake.headPosition[0], snake.headPosition[1]-1]
 
-    currentBoardState[snake.headPosition[0]][snake.headPosition[1]] = snake.headCharacter
-    currentBoardState[snake.tailPosition[0]][snake.tailPosition[1]] = snake.tailCharacter
+    currentBoardState[snake.headPosition[0]][snake.headPosition[1]] = snake.bodyCharacter
+    #currentBoardState[snake.tailPosition[0]][snake.tailPosition[1]] = snake.tailCharacter
 
 
 generateBoard()
@@ -172,7 +170,7 @@ while playingGame:
     
 
     updateSnake(currentInput)
-    updateBoard()
+    #updateBoard() #update head positions
 
     
 
@@ -185,7 +183,7 @@ while playingGame:
     print('current Input:' + str(currentInput))
     print('snake\'s current Direction: ' + str(snake.currentDirection))
     #time Control
-    time.sleep(2)
+    time.sleep(1/6)
     
     
 
