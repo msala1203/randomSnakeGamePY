@@ -21,10 +21,12 @@ class Snake():
     headPosition = [random.randrange(0,boardsize), random.randrange(0,boardsize)]
     headCharacter = 'H'
     tailPosition = [headPosition[0], headPosition[1]-1]
-    tailDirection = 'right'
-    tailCharacter = 'T'
+    tailPositions = [headPosition, tailPosition]
+    tailCharacter = 't'
     length = 1
+    grow = False
     alive = True
+    
 
     def __init__(self, xPosition, yPosition, length):
         self.headPosition[0] = xPosition
@@ -56,6 +58,26 @@ class Snake():
         elif input == 'd' and self.currentDirection != 'left':
             self.currentDirection = 'right'
 
+    @classmethod
+    def updateTailPosition(self):
+
+        #after snake head moves up. shift all the values in the array up
+
+        self.tailPositions[0][0] = self.headPosition[0]
+        self.tailPositions[0][1] = self.headPosition[1]
+
+        currentTailEndX = self.tailPositions[-1][0]
+        currentTailEndY = self.tailPositions[-1][1]
+
+        for i in range(len(self.tailPositions)-1, 0, -1):
+            self.tailPositions[i] = self.tailPositions[i-1]
+            
+        currentBoardState[currentTailEndX][currentTailEndY] = '.'
+
+        '''
+        currentBoardState[self.tailPositions[-1][0]][self.tailPositions[-1][1]] = '.'
+        self.tailPositions[-1] = self.tailPositions [-2]
+        '''
 
 
 def keyboardInputCheck():
@@ -85,6 +107,7 @@ def generateNewAppleLocation():
 
 def updateSnake(currentInput):
     snake.updateSnakeDirection(currentInput)
+    snake.updateTailPosition()
     snake.updateSnakeHeadPosition()
 
 def updateBoard():
@@ -140,6 +163,7 @@ while playingGame:
     #game logic
     currentInput = keyboardInputCheck()
     
+    
     updateSnake(currentInput)
     updateBoard()
 
@@ -154,7 +178,7 @@ while playingGame:
     print('current Input:' + str(currentInput))
     print('snake\'s current Direction: ' + str(snake.currentDirection))
     #time Control
-    time.sleep(1/5)
+    time.sleep(2)
     
     
 
