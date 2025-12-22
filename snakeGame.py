@@ -8,7 +8,7 @@ import os
 boardsize = 20
 
 currentBoardState = []
-
+appleLocation = []
 
 
 def clearScreen():
@@ -98,12 +98,19 @@ def generateNewAppleLocation():
     positionX = random.randrange(0,boardsize-1)
     positionY = random.randrange(0,boardsize-1)
 
+    appleLocation[0] = positionX
+    appleLocation[1] = positionY
+
     while currentBoardState[positionX][positionY] != '.':
         positionX = random.randrange(0,boardsize-1)
         positionY = random.randrange(0,boardsize-1)
     
     currentBoardState[positionX][positionY] = 'O'
 
+def appleEatten():
+    if currentBoardState[appleLocation[0]][appleLocation[1]] != 'O':
+        return True
+    return False
 
 def updateSnake(currentInput):
     snake.updateSnakeDirection(currentInput)
@@ -163,7 +170,7 @@ while playingGame:
     #game logic
     currentInput = keyboardInputCheck()
     
-    
+
     updateSnake(currentInput)
     updateBoard()
 
