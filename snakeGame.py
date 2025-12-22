@@ -20,8 +20,7 @@ class Snake():
     currentDirection = 'right'
     headPosition = [random.randrange(0,boardsize), random.randrange(0,boardsize)]
     bodyCharacter = 'H'
-    tailPosition = [headPosition[0], headPosition[1]-1]
-    tailPositions = [headPosition, tailPosition]
+    tailPositions = [headPosition]
     length = 1
     grow = False
     alive = True
@@ -30,7 +29,7 @@ class Snake():
     def __init__(self, xPosition, yPosition, length):
         self.headPosition[0] = xPosition
         self.headPosition[1] = yPosition
-        self.tailPositions[-1] = [xPosition, yPosition-1]
+        self.tailPositions.append([xPosition, yPosition-1])
         self.length = length
 
     @classmethod
@@ -61,14 +60,17 @@ class Snake():
     @classmethod
     def updateTailPosition(self):
 
-        currentTailEndX = self.tailPositions[-1][0]
-        currentTailEndY = self.tailPositions[-1][1]
+        if not self.grow:
+            currentTailEndX = self.tailPositions[-1][0]
+            currentTailEndY = self.tailPositions[-1][1]
 
-        for i in range(len(self.tailPositions)-1, 0, -1):
-            self.tailPositions[i][0] = self.tailPositions[i-1][0]
-            self.tailPositions[i][1] = self.tailPositions[i-1][1]
-            
-        currentBoardState[currentTailEndX][currentTailEndY] = '.'
+            for i in range(len(self.tailPositions)-1, 0, -1):
+                self.tailPositions[i][0] = self.tailPositions[i-1][0]
+                self.tailPositions[i][1] = self.tailPositions[i-1][1]
+                
+            currentBoardState[currentTailEndX][currentTailEndY] = '.'
+        else:
+            self.grow = False
 
         '''
         currentBoardState[self.tailPositions[-1][0]][self.tailPositions[-1][1]] = '.'
@@ -115,10 +117,14 @@ def appleEatten():
 
 def updateSnake(currentInput):
     snake.updateSnakeDirection(currentInput)
+
+    if appleEatten():
+        snake.grow = True
+        generateNewAppleLocation()
+
     snake.updateTailPosition()
     snake.updateSnakeHeadPosition()
 
-    
     snake.updateSnakeOnBoard()
 
 
@@ -154,9 +160,7 @@ playingGame = True
 snake = Snake(10,5,0)
 
 def generateSnake():
-
-    snake.tailPosition = [snake.headPosition[0], snake.headPosition[1]-1]
-
+    
     currentBoardState[snake.headPosition[0]][snake.headPosition[1]] = snake.bodyCharacter
     #currentBoardState[snake.tailPosition[0]][snake.tailPosition[1]] = snake.tailCharacter
 
