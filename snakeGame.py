@@ -101,13 +101,14 @@ def generateNewAppleLocation():
     positionX = random.randrange(0,boardsize-1)
     positionY = random.randrange(0,boardsize-1)
 
+
     appleLocation[0] = positionX
     appleLocation[1] = positionY
 
     while currentBoardState[positionX][positionY] != '.':
         positionX = random.randrange(0,boardsize-1)
         positionY = random.randrange(0,boardsize-1)
-    
+
     currentBoardState[positionX][positionY] = 'O'
 
 def appleEatten():
