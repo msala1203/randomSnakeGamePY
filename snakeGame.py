@@ -26,11 +26,10 @@ class Snake():
     alive = True
     
 
-    def __init__(self, xPosition, yPosition, length):
+    def __init__(self, xPosition, yPosition):
         self.headPosition[0] = xPosition
         self.headPosition[1] = yPosition
         self.tailPositions.append([xPosition, yPosition-1])
-        self.length = length
 
     @classmethod
     def updateSnakeHeadPosition(self):
@@ -42,6 +41,9 @@ class Snake():
             self.headPosition[0] -= 1
         elif self.currentDirection == 'down':
             self.headPosition[0] += 1
+
+        self.tailPositions[0][0] = self.headPosition[0]
+        self.tailPositions[0][1] = self.headPosition[1]
 
 
     @classmethod
@@ -79,8 +81,28 @@ class Snake():
 
     @classmethod
     def updateSnakeOnBoard(self):
-        for i in self.tailPositions:
-            currentBoardState[i[0]][i[1]] = self.bodyCharacter
+
+        for i in range(len(self.tailPositions)-1):
+            if self.headPosition[0] == self.tailPositions[i+1][0] and self.headPosition[1] == self.tailPositions[i+1][1]:
+                self.alive = False
+                break
+
+        if self.currentDirection == 'up' and self.headPosition[0] < 0:
+            self.alive = False
+        if self.currentDirection == 'down' and self.headPosition[0] > boardsize - 1:
+            self.alive = False
+        if self.currentDirection == 'left' and self.headPosition[1] < 0:
+            self.alive = False
+        if self.currentDirection == 'right' and self.headPosition[1] > boardsize - 1:
+            self.alive = False
+
+        if self.alive == True:
+            for i in self.tailPositions:
+                currentBoardState[i[0]][i[1]] = self.bodyCharacter
+
+    @classmethod
+    def generateScore(self):
+        return len(snake.tailPositions) - 2
 
 
 def keyboardInputCheck():
@@ -135,7 +157,7 @@ def printBoard():
 
     boardString = ""
 
-    boardString += "\nScore: " + "0"
+    boardString += "\nScore: " + str(snake.generateScore())
 
     boardString += "\n"
 
@@ -159,7 +181,7 @@ def printBoard():
 
 playingGame = True
 
-snake = Snake(10,5,0)
+snake = Snake(10,5)
 
 def generateSnake():
 
@@ -171,13 +193,13 @@ generateBoard()
 generateSnake()
 generateNewAppleLocation()
 
+
 #Main Game loop
 while playingGame:
-    
+
     #game logic
     currentInput = keyboardInputCheck()
     
-
     updateSnake(currentInput)
     #updateBoard() #update head positions
 
@@ -191,9 +213,15 @@ while playingGame:
     print(printBoard())
     print('current Input:' + str(currentInput))
     print('snake\'s current Direction: ' + str(snake.currentDirection))
+    print('Snake\'s position: X = ' + str(snake.headPosition[0]) + ', Y = ' + str(snake.headPosition[1]))
+    print('Snake is alive: ' + str(snake.alive))
     #time Control
     time.sleep(1/6)
-    
+
+    if not snake.alive:
+        playingGame = False
+
+
     
 
 
