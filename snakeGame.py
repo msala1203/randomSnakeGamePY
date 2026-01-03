@@ -5,11 +5,10 @@ import msvcrt
 import time
 import os
 
-boardsize = 20
+boardsize = 15
 
 currentBoardState = []
 appleLocation = [0, 0]
-
 
 def clearScreen():
     # Move cursor to top-left and clear screen
@@ -148,7 +147,7 @@ def updateSnake(currentInput):
 
     snake.updateTailPosition()
     snake.updateSnakeHeadPosition()
-
+ 
     snake.updateSnakeOnBoard()
 
 
@@ -181,45 +180,70 @@ def printBoard():
 
 playingGame = True
 
-snake = Snake(10,5)
+snake = Snake(boardsize//2, boardsize//3)
 
 def generateSnake():
 
     currentBoardState[snake.headPosition[0]][snake.headPosition[1]] = snake.bodyCharacter
     #currentBoardState[snake.tailPosition[0]][snake.tailPosition[1]] = snake.tailCharacter
 
-
 generateBoard()
 generateSnake()
 generateNewAppleLocation()
 
 
+print(printBoard())
+print('Any key to start:')
+waitingToStart = True
+
+while waitingToStart:
+    currentInput = keyboardInputCheck()
+
+    if currentInput != None:
+        waitingToStart = False
+
 #Main Game loop
 while playingGame:
 
-    #game logic
-    currentInput = keyboardInputCheck()
-    
-    updateSnake(currentInput)
-    #updateBoard() #update head positions
+    if snake.alive:
+        #game logic
+        currentInput = keyboardInputCheck()
+        
+        updateSnake(currentInput)
+        #updateBoard() #update head positions
 
-    
+        
 
 
-    if (currentInput == "q"):
-        break
-    
-    #render
-    print(printBoard())
-    print('current Input:' + str(currentInput))
-    print('snake\'s current Direction: ' + str(snake.currentDirection))
-    print('Snake\'s position: X = ' + str(snake.headPosition[0]) + ', Y = ' + str(snake.headPosition[1]))
-    print('Snake is alive: ' + str(snake.alive))
-    #time Control
-    time.sleep(1/6)
+        if (currentInput == "q"):
+            break
+        
+        #render
+        print(printBoard())
+        '''
+        print('current Input:' + str(currentInput))
+        print('snake\'s current Direction: ' + str(snake.currentDirection))
+        print('Snake\'s position: X = ' + str(snake.headPosition[0]) + ', Y = ' + str(snake.headPosition[1]))
+        print('Snake is alive: ' + str(snake.alive))
+        '''
+        #time Control
+        time.sleep(1/5)
 
-    if not snake.alive:
+    if snake.alive == False:
         playingGame = False
+    
+    '''
+    else:
+        clearScreen()
+        print("Restart? Y/N: ")
+        playerInput = input()
+
+        if playerInput.upper == 'Y':
+            print("restart")
+        else:
+            playingGame = False
+    '''
+
 
 
     
